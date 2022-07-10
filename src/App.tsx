@@ -4,7 +4,7 @@ import './App.css';
 
 const App = () => {
   const [sudokuGrid, setSudokuGrid] = useState(getSudokuBoard());
-  let errorMessage = "";
+  const [errorMessage, setErrorMessage] = useState("");
 
   function isNumeric(str: any) {
     return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
@@ -24,9 +24,10 @@ const App = () => {
       const newBoardState = solveSudoku(sudokuGrid);
 
       setSudokuGrid(newBoardState);
+      setErrorMessage("");
     }
     catch{
-      errorMessage = "Error: Unsolvable sudoku";
+      setErrorMessage("Error: Unsolvable sudoku");
     }
   }
 

@@ -27,4 +27,9 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  font-size: 32px;
+}
+button {
+  width: 33%;
+  height: 40px;
 }

@@ -49,9 +49,11 @@ const solveOneStep = (tempBoard: SudokuFieldProps[]) : boolean => {
 
     const knownFields = tempBoard.filter(f => {return f.possibleValues.length === 1});
 
-    if(knownFields.length === 0)
+    const errorFields = tempBoard.filter(f => {return f.possibleValues.length === 0 && f.value === null});
+
+    if(knownFields.length === 0 || errorFields.length !== 0)
     {
-        throw 'Unsolvable';
+        throw new Error('Unsolvable');
     }
     
     knownFields.forEach(knownField => {
