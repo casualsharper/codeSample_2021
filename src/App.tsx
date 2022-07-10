@@ -11,6 +11,10 @@ const App = () => {
            !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
   }
 
+  const onResetClicked = () => {
+    setSudokuGrid(getSudokuBoard());
+  }
+
   const onExampleClicked = () => {
     setSudokuGrid(getSampleSudokuBoard());
   }
@@ -27,6 +31,12 @@ const App = () => {
   }
 
   const onFieldChange = (event: React.ChangeEvent<HTMLInputElement>, sudokuField: SudokuFieldProps | undefined) => {
+    if(!event.target.value && sudokuField){
+      sudokuField.value = null;
+      const tempSudoku = [...sudokuGrid];
+      setSudokuGrid(tempSudoku);
+    }
+
     const newValue = Array.from(event.target.value).pop();
 
     if(newValue && isNumeric(newValue) && sudokuField){
@@ -38,9 +48,7 @@ const App = () => {
       }
 
       sudokuField.value = newNumber;
-
       const tempSudoku = [...sudokuGrid];
-
       setSudokuGrid(tempSudoku);
     }
   }
@@ -84,6 +92,7 @@ const App = () => {
       <div>
         <button onClick={onSolveClicked}>Solve</button>
         <button onClick={onExampleClicked}>Example</button>
+        <button onClick={onResetClicked}>Reset</button>
       </div>
     </div>);
 }

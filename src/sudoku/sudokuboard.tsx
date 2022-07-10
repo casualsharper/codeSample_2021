@@ -30,6 +30,7 @@ const setBoardField = (row: number, column: number, value: number, tempBoard: Su
 const solveOneStep = (tempBoard: SudokuFieldProps[]) : boolean => {
     let result = false;
     const emptyFields = tempBoard.filter(f => {return f.value === null});
+    const possibleValues = [1,2,3,4,5,6,7,8,9];
 
     if(emptyFields.length === 0)
     {
@@ -41,7 +42,9 @@ const solveOneStep = (tempBoard: SudokuFieldProps[]) : boolean => {
         const column = tempBoard.filter(f => {return f.column === emptyField.column && f.value}).map(m => {return m.value});
         const block = tempBoard.filter(f => {return f.block === emptyField.block && f.value}).map(m => {return m.value});
         
-        emptyField.possibleValues = mergeUnique(mergeUnique(row,column), block);
+        const usedValues = mergeUnique(mergeUnique(row,column), block);
+
+        emptyField.possibleValues = possibleValues.filter(f => {return !usedValues.includes(f)})
     });
 
     const knownFields = tempBoard.filter(f => {return f.possibleValues.length === 1});
