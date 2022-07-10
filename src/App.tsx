@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
-import getSudokuBoard, { SudokuFieldProps } from './sudoku/sudokuboard';
+import { getSudokuBoard, solveSudoku, getSampleSudokuBoard, SudokuFieldProps } from './sudoku/sudokuboard';
 import './App.css';
 
 const App = () => {
   const [sudokuGrid, setSudokuGrid] = useState(getSudokuBoard());
+  let errorMessage = "";
 
   function isNumeric(str: any) {
     return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
            !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
   }
 
+  const onExampleClicked = () => {
+    setSudokuGrid(getSampleSudokuBoard());
+  }
+
   const onSolveClicked = () => {
-    console.log("solving");
+    try{
+      const newBoardState = solveSudoku(sudokuGrid);
+
+      setSudokuGrid(newBoardState);
+    }
+    catch{
+      errorMessage = "Error: Unsolvable sudoku";
+    }
   }
 
   const onFieldChange = (event: React.ChangeEvent<HTMLInputElement>, sudokuField: SudokuFieldProps | undefined) => {
@@ -68,7 +80,11 @@ const App = () => {
         <colgroup><col/><col/><col/></colgroup>
         {drawSudokuGrid(sudokuGrid)}
       </table>
-      <button onClick={onSolveClicked}>Solve</button>
+      <div>{errorMessage}</div>
+      <div>
+        <button onClick={onSolveClicked}>Solve</button>
+        <button onClick={onExampleClicked}>Example</button>
+      </div>
     </div>);
 }
 

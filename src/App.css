@@ -22,3 +22,9 @@ input{
   font-size: 64px;
   text-align: center;
 }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
