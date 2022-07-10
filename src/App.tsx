@@ -34,6 +34,18 @@ const App = () => {
     }
   };
 
+  const focusNextField = (fieldName: string) => {
+    let nextInputField: HTMLInputElement | null = document.querySelector(
+      'input[name="' + fieldName + '"]'
+    );
+
+    if (!nextInputField) {
+      nextInputField = document.querySelector('input[name="field_0"]');
+    }
+
+    nextInputField?.focus();
+  };
+
   const onFieldKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const acceptedInputs = [
       "Digit0",
@@ -73,6 +85,11 @@ const App = () => {
     if (!nextFieldInputs.includes(event.code)) {
       return;
     }
+
+    const nextFieldName =
+      "field_" + (parseInt(event.currentTarget.name.split("_")[1]) + 1);
+
+    focusNextField(nextFieldName);
   };
 
   const onFieldChange = (
@@ -97,12 +114,19 @@ const App = () => {
       sudokuField.value = newNumber;
       const tempSudoku = [...sudokuGrid];
       setSudokuGrid(tempSudoku);
+
+      const nextFieldName =
+        "field_" + (parseInt(event.currentTarget.name.split("_")[1]) + 1);
+
+      focusNextField(nextFieldName);
     }
   };
 
   const drawSudokuGrid = (sudokuGrid: SudokuFieldProps[]) => {
     const tbodies = [];
     let rows = [];
+
+    let fieldNum = 0;
 
     for (let row = 0; row < 9; row++) {
       const rowFields = [];
@@ -114,6 +138,7 @@ const App = () => {
         rowFields.push(
           <td key={column}>
             <input
+              name={"field_" + fieldNum.toString()}
               type="number"
               pattern="\d*"
               onKeyDownCapture={onFieldKeyDown}
@@ -124,6 +149,8 @@ const App = () => {
             ></input>
           </td>
         );
+
+        fieldNum++;
       }
 
       rows.push(<tr key={rows.length + 1}>{rowFields}</tr>);
