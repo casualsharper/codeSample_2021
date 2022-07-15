@@ -36,16 +36,16 @@ const App = () => {
     }
   };
 
-  const focusNextField = (fieldName: string) => {
-    let nextInputField: HTMLInputElement | null = document.querySelector(
+  const focusInputField = (fieldName: string) => {
+    let focusInputField: HTMLInputElement | null = document.querySelector(
       'input[name="' + fieldName + '"]'
     );
 
-    if (!nextInputField) {
-      nextInputField = document.querySelector('input[name="field_0"]');
+    if (!focusInputField) {
+      focusInputField = document.querySelector('input[name="field_0"]');
     }
 
-    nextInputField?.focus();
+    focusInputField?.focus();
   };
 
   const onFieldKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -75,6 +75,7 @@ const App = () => {
     ];
 
     const nextFieldInputs = ["Space", "Numpad0", "Digit0"];
+    const previousFieldInputs = ["Backspace"];
 
     if (
       !acceptedInputs.includes(event.code) &&
@@ -84,14 +85,35 @@ const App = () => {
       return;
     }
 
+    let fieldNumber = parseInt(event.currentTarget.name.split("_")[1]);
+
+    if (previousFieldInputs.includes(event.code)) {
+      fieldNumber--;
+
+      if (fieldNumber < 0) {
+        fieldNumber = 80;
+      }
+
+      const previousFieldName = "field_" + fieldNumber;
+
+      focusInputField(previousFieldName);
+
+      return;
+    }
+
     if (!nextFieldInputs.includes(event.code)) {
       return;
     }
 
-    const nextFieldName =
-      "field_" + (parseInt(event.currentTarget.name.split("_")[1]) + 1);
+    fieldNumber++;
 
-    focusNextField(nextFieldName);
+    if (fieldNumber > 80) {
+      fieldNumber = 0;
+    }
+
+    const nextFieldName = "field_" + fieldNumber;
+
+    focusInputField(nextFieldName);
   };
 
   const onFieldChange = (
@@ -121,7 +143,7 @@ const App = () => {
       const nextFieldName =
         "field_" + (parseInt(event.currentTarget.name.split("_")[1]) + 1);
 
-      focusNextField(nextFieldName);
+      focusInputField(nextFieldName);
     }
   };
 
