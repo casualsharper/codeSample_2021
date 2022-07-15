@@ -88,6 +88,8 @@ const App = () => {
     let fieldNumber = parseInt(event.currentTarget.name.split("_")[1]);
 
     if (previousFieldInputs.includes(event.code)) {
+      event.preventDefault();
+
       fieldNumber--;
 
       if (fieldNumber < 0) {
