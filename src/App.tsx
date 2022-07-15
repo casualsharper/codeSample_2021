@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import {
   getSudokuBoard,
-  solveSudoku,
+  solveBoard,
   getSampleSudokuBoard,
-  SudokuFieldProps,
 } from "./sudoku/sudokuboard";
 import "./App.css";
 
@@ -24,13 +23,16 @@ const App = () => {
   };
 
   const onSolveClicked = () => {
-    try {
-      const newBoardState = solveSudoku(sudokuGrid);
+    const tempSudokuGrid = [...sudokuGrid];
 
-      setSudokuGrid(newBoardState);
+    const isSolved = solveBoard(tempSudokuGrid);
+
+    setSudokuGrid(tempSudokuGrid);
+
+    if (isSolved) {
       setErrorMessage("");
-    } catch {
-      setErrorMessage("Error: Unsolvable sudoku");
+    } else {
+      setErrorMessage("Unsolvable");
     }
   };
 
@@ -94,25 +96,26 @@ const App = () => {
 
   const onFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    sudokuField: SudokuFieldProps | undefined
+    row: number,
+    column: number
   ) => {
-    if (!event.target.value && sudokuField) {
-      sudokuField.value = null;
+    if (!event.target.value) {
       const tempSudoku = [...sudokuGrid];
+      tempSudoku[row][column] = ".";
       setSudokuGrid(tempSudoku);
     }
 
     const newValue = Array.from(event.target.value).pop();
 
-    if (newValue && isNumeric(newValue) && sudokuField) {
+    if (newValue && isNumeric(newValue)) {
       const newNumber = parseInt(newValue);
 
       if (newNumber > 9 || newNumber < 1) {
         return;
       }
 
-      sudokuField.value = newNumber;
       const tempSudoku = [...sudokuGrid];
+      tempSudoku[row][column] = newNumber;
       setSudokuGrid(tempSudoku);
 
       const nextFieldName =
@@ -122,19 +125,16 @@ const App = () => {
     }
   };
 
-  const drawSudokuGrid = (sudokuGrid: SudokuFieldProps[]) => {
+  const drawSudokuGrid = (sudokuGrid: any[][]) => {
     const tbodies = [];
     let rows = [];
 
     let fieldNum = 0;
 
-    for (let row = 0; row < 9; row++) {
+    for (let row = 0; row < sudokuGrid.length; row++) {
       const rowFields = [];
-
-      for (let column = 0; column < 9; column++) {
-        const field = sudokuGrid?.find((f) => {
-          return f.column === column && f.row === row;
-        });
+      const columns = sudokuGrid[row];
+      for (let column = 0; column < columns.length; column++) {
         rowFields.push(
           <td key={column}>
             <input
@@ -143,9 +143,9 @@ const App = () => {
               pattern="\d*"
               onKeyDownCapture={onFieldKeyDown}
               onChange={(event) => {
-                onFieldChange(event, field);
+                onFieldChange(event, row, column);
               }}
-              value={field?.value ?? ""}
+              value={columns[column] === "." ? "" : columns[column]}
             ></input>
           </td>
         );
