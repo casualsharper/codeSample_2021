@@ -1,15 +1,19 @@
-const isValid = (board: any[], row: number, col: number, k: number) => {
+const isValid = (board: string[][], row: number, col: number, k: number) => {
   for (let i = 0; i < 9; i++) {
     const m = 3 * Math.floor(row / 3) + Math.floor(i / 3);
     const n = 3 * Math.floor(col / 3) + (i % 3);
-    if (board[row][i] === k || board[i][col] === k || board[m][n] === k) {
+    if (
+      board[row][i] === k.toString() ||
+      board[i][col] === k.toString() ||
+      board[m][n] === k.toString()
+    ) {
       return false;
     }
   }
   return true;
 };
 
-export const solveBoard = (boardData: any[][]) => {
+export const solveBoard = (boardData: string[][]) => {
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       if (boardData[i][j] === ".") {
@@ -30,8 +34,8 @@ export const solveBoard = (boardData: any[][]) => {
   return true;
 };
 
-export const getSudokuBoard = (): any[][] => {
-  const board: any[][] = [];
+export const getSudokuBoard = (): string[][] => {
+  const board: any[] = [];
 
   for (let row = 0; row < 9; row++) {
     board[row] = [];
@@ -44,7 +48,7 @@ export const getSudokuBoard = (): any[][] => {
   return board;
 };
 
-export const getSampleSudokuBoard = (): any[][] => {
+export const getSampleSudokuBoard = (): string[][] => {
   const sampleBoard = getSudokuBoard();
 
   sampleBoard[0][0] = "2";

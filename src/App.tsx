@@ -115,7 +115,7 @@ const App = () => {
       }
 
       const tempSudoku = [...sudokuGrid];
-      tempSudoku[row][column] = newNumber;
+      tempSudoku[row][column] = newValue;
       setSudokuGrid(tempSudoku);
 
       const nextFieldName =
